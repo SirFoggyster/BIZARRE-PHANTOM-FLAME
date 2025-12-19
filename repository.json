@@ -1,0 +1,11 @@
+{
+  "name": "Bizarre Phantom Flame",
+  "author": "SirFoggyster",
+  "description": "Custom Bizarre / Phantom Flame archetype",
+  "repo": "https://github.com/SirFoggyster/BIZARRE-PHANTOM-FLAME",
+  "database": {
+    "bizarre_phantom_flame": {
+      "file": "expansions/bizarre_phantom_flame.cdb"
+    }
+  }
+}
