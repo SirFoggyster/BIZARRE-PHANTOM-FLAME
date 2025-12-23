@@ -2,47 +2,56 @@
 local s,id=GetID()
 
 function s.initial_effect(c)
-    -- Activate: negate effect and gain control of attacking monster
+    -- Activate Continuous Trap
+    local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_ACTIVATE)
+    e0:SetCode(EVENT_FREE_CHAIN)
+    c:RegisterEffect(e0)
+
+    -- When opponent declares an attack
     local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_CONTROL+CATEGORY_NEGATE)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetCode(EVENT_BE_BATTLE_TARGET)  -- Can also use EVENT_CHAINING for effect-based
-    e1:SetCondition(s.condition)
-    e1:SetTarget(s.target)
-    e1:SetOperation(s.activate)
+    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+    e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+    e1:SetRange(LOCATION_SZONE)
+    e1:SetCondition(s.atkcon)
+    e1:SetTarget(s.atktg)
+    e1:SetOperation(s.atkop)
     c:RegisterEffect(e1)
 end
 
--- Condition: must be attacked
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
+-- Condition: opponent's monster attacks
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
     local at=Duel.GetAttacker()
-    return at and at:IsOnField() and at:IsControler(1-tp)
+    return at and at:IsControler(1-tp)
 end
 
--- Targeting
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+-- Target the attacking monster
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
     local at=Duel.GetAttacker()
-    if chk==0 then return at:IsControler(1-tp) and at:IsAbleToChangeControler() end
+    if chk==0 then return at:IsRelateToBattle() and at:IsAbleToChangeControler() end
     Duel.SetTargetCard(at)
-    Duel.SetOperationInfo(0,CATEGORY_CONTROL,at,1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_NEGATE,nil,0,0,0)
 end
 
 -- Operation
-function s.activate(e,tp,eg,ep,ev,re,r,rp)
+function s.atkop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
     local at=Duel.GetAttacker()
-    if at and at:IsRelateToBattle() then
-        -- Negate any effect if attacking
-        Duel.NegateAttack()
+    if not at or not at:IsRelateToBattle() then return end
 
-        -- Take control until it leaves the field
-        if Duel.GetControl(at,tp,PHASE_END,1) then
-            -- Optional: flag to track until leaves field
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(EFFECT_UNRELEASABLE)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            at:RegisterEffect(e1)
-        end
-    end
+    -- Negate the attack
+    Duel.NegateAttack()
+
+    -- Negate attacking monster's effects
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_DISABLE)
+    e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+    at:RegisterEffect(e1)
+
+    local e2=e1:Clone()
+    e2:SetCode(EFFECT_DISABLE_EFFECT)
+    at:RegisterEffect(e2)
+
+    -- Take control until it leaves the field
+    Duel.GetControl(at,tp)
 end
