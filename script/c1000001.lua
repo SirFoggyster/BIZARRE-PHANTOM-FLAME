@@ -29,16 +29,16 @@ function s.initial_effect(c)
     e1:SetValue(s.immval)
     c:RegisterEffect(e1)
 
-    -- Burn damage (3+ Bizarre)
+    -- Burn damage (2+ Bizarre)
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1,id)
+    e2:SetCountLimit(,id)
     e2:SetCondition(s.burncon)
     e2:SetOperation(s.burnop)
     c:RegisterEffect(e2)
 
-    -- Search on destroy (5+ Bizarre)
+    -- Search on destroy (3+ Bizarre)
     local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e3:SetCode(EVENT_DESTROYED)
@@ -82,12 +82,12 @@ end
 
 -- Search condition (5+ Bizarre)
 function s.thcon(e,tp)
-    return s.bizarrecount(tp)>=5
+    return s.bizarrecount(tp)>=4
 end
 
 -- Search Phantom’s World S/T
 function s.thfilter(c)
-    return c:IsSetCard(SET_PHANTOM)
+    return c:IsSetCard(SET_PHANTOM+SET_BIZARRE)
         and c:IsType(TYPE_SPELL+TYPE_TRAP)
         and c:IsAbleToHand()
 end
