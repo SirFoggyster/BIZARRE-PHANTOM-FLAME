@@ -8,8 +8,7 @@ function s.initial_effect(c)
     e1:SetCategory(CATEGORY_NEGATE+CATEGORY_TODECK)
     e1:SetType(EFFECT_TYPE_QUICK_O)
     e1:SetCode(EVENT_CHAINING)
-    e1:SetRange(LOCATION_HAND)
-    e1:SetCountLimit(1,id)
+    e1:SetRange(LOCATION_HAND+LOCATION_MZONE)
     e1:SetCondition(s.negcon)
     e1:SetCost(s.negcost)
     e1:SetTarget(s.negtg)
@@ -30,8 +29,19 @@ end
 
 -- Discard itself
 function s.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():IsDiscardable() end
-    Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+    local c=e:GetHandler()
+    if chk==0 then
+        if c:IsLocation(LOCATION_HAND) then
+            return c:IsDiscardable()
+        else
+            return c:IsReleasable()
+        end
+    end
+    if c:IsLocation(LOCATION_HAND) then
+        Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+    else
+        Duel.Release(c,REASON_COST)
+    end
 end
 
 -- Target is implicit (chain)
