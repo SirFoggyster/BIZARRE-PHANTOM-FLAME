@@ -1,13 +1,13 @@
 -- Red the Bizarre Tactician
 local s,id=GetID()
-local SET_BIZARRE/PHANTOM = 0xBA8
+local SET_BIZARRE = 0xBA5
+local SET_PHANTOM = 0xBA6
 
 s.listed_series={SET_BIZARRE,SET_PHANTOM}
 
 function s.initial_effect(c)
-    
     -- Treated as "Bizarre" in Deck, hand, GY, banished
-   local e0=Effect.CreateEffect(c)
+    local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetCode(EFFECT_ADD_SETCODE)
     e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -17,32 +17,29 @@ function s.initial_effect(c)
     local e0b=e0:Clone()
     e0b:SetValue(SET_PHANTOM)
     c:RegisterEffect(e0b)
-    
-    
-    -- Normal Summon is allowed (default)
 
     -- Special Summon from hand if Bizarre or Phantom monster on field
-    local e0=Effect.CreateEffect(c)
-    e0:SetType(EFFECT_TYPE_FIELD)
-    e0:SetCode(EFFECT_SPSUMMON_PROC)
-    e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e0:SetRange(LOCATION_HAND)
-    e0:SetCondition(s.spcon)
-    c:RegisterEffect(e0)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetCode(EFFECT_SPSUMMON_PROC)
+    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+    e1:SetRange(LOCATION_HAND)
+    e1:SetCondition(s.spcon)
+    c:RegisterEffect(e1)
 
     -- Search 1 "Bizarre" Spell/Trap on Summon
-    local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-    e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e1:SetCode(EVENT_SUMMON_SUCCESS)
-    e1:SetProperty(EFFECT_FLAG_DELAY)
-    e1:SetCountLimit(1,id)
-    e1:SetTarget(s.thtg)
-    e1:SetOperation(s.thop)
-    c:RegisterEffect(e1)
-    local e2=e1:Clone()
-    e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+    local e2=Effect.CreateEffect(c)
+    e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+    e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e2:SetCode(EVENT_SUMMON_SUCCESS)
+    e2:SetProperty(EFFECT_FLAG_DELAY)
+    e2:SetCountLimit(1,id)
+    e2:SetTarget(s.thtg)
+    e2:SetOperation(s.thop)
     c:RegisterEffect(e2)
+    local e3=e2:Clone()
+    e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+    c:RegisterEffect(e3)
 end
 
 -- Special Summon condition
