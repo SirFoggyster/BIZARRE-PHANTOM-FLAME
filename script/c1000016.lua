@@ -27,6 +27,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     -- Count FIRE monsters in your deck
     local ct=Duel.GetMatchingGroupCount(function(c) return c:IsAttribute(ATTRIBUTE_FIRE) end,tp,LOCATION_DECK,0,nil)
     if ct>0 then
-        Duel.Damage(1-tp,ct*600,REASON_EFFECT)
+        Duel.Damage(1-tp,ct*1000,REASON_EFFECT)
     end
 end
