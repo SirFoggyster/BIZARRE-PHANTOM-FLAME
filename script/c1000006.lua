@@ -1,13 +1,13 @@
 -- Red the Bizarre Tactician
 local s,id=GetID()
-local SET_BIZARRE = 0xBA5
-local SET_PHANTOM = 0xBA6
+local SET_BIZARRE/PHANTOM = 0xBA8
 
 s.listed_series={SET_BIZARRE,SET_PHANTOM}
 
 function s.initial_effect(c)
-    -- Treated as "Bizarre" in Deck, hand, GY, banished
-    local e0=Effect.CreateEffect(c)
+    
+    -- Treated as "Bizarre" in Deck, hand, M.Zone, GY, banished
+   local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetCode(EFFECT_ADD_SETCODE)
     e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -17,13 +17,16 @@ function s.initial_effect(c)
     local e0b=e0:Clone()
     e0b:SetValue(SET_PHANTOM)
     c:RegisterEffect(e0b)
+    
+    
+    -- Normal Summon is allowed (default)
 
-    -- Special Summon from hand if Bizarre or Phantom monster on field
+    -- Special Summon from hand or GY if "Bizarre" or "Phantom" monster is on the field
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e1:SetRange(LOCATION_HAND)
+    e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
     e1:SetCondition(s.spcon)
     c:RegisterEffect(e1)
 
