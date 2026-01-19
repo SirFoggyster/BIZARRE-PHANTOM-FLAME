@@ -1,7 +1,7 @@
 -- Requiem Gold – Echo of Experience
      local s,id=GetID()
      local SET_REQUIEM = 0xBA9
-
+     local SET_PHANTOM = 0xBA6
 function s.initial_effect(c)
     
      -- Treated as "Bizarre" and "Phantom" in Deck, hand, GY, banished

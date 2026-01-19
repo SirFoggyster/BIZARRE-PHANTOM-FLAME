@@ -1,6 +1,6 @@
 -- Infernal Stand Birth
 local s,id=GetID()
-
+local SET_BIZARRE = 0xBA5
 function s.initial_effect(c)
     -- Treated as "Bizarre" Spell card
     local e0=Effect.CreateEffect(c)

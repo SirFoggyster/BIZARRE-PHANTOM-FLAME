@@ -1,5 +1,6 @@
 -- Mandom – Time Loop Trigger
 local s,id=GetID()
+local SET_PHANTOM = 0xBA6
 
 function s.initial_effect(c)
     -- Hand trap negate & rewind

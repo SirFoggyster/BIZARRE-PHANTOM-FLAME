@@ -1,5 +1,6 @@
 -- Magician's Revenge Flame
 local s,id=GetID()
+local SET_BIZARRE = 0xBA5
 local ATTRIBUTE_FIRE=ATTRIBUTE_FIRE
 
 function s.initial_effect(c)
