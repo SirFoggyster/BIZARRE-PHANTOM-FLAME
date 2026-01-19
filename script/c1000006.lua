@@ -1,6 +1,7 @@
 -- Red the Bizarre Tactician
 local s,id=GetID()
-local SET_BIZARRE/PHANTOM = 0xBA8
+local SET_BIZARRE = 0xBA5
+local SET_PHANTOM = 0xBA6
 
 s.listed_series={SET_BIZARRE,SET_PHANTOM}
 
