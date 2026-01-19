@@ -14,9 +14,6 @@ function s.initial_effect(c)
     e0:SetRange(LOCATION_DECK+LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED)
     e0:SetValue(SET_BIZARRE)
     c:RegisterEffect(e0)
-    local e0b=e0:Clone()
-    e0b:SetValue(SET_PHANTOM)
-    c:RegisterEffect(e0b)
     
     
     -- Normal Summon is allowed (default)
@@ -28,21 +25,18 @@ function s.initial_effect(c)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
     e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
     e1:SetCondition(s.spcon)
+    e1:SetCountLimit(1,id+100) -- Once per turn
     c:RegisterEffect(e1)
 
-    -- Search 1 "Bizarre" Spell/Trap on Summon
+    -- Once per turn: Search 1 "Bizarre" Spell/Trap
     local e2=Effect.CreateEffect(c)
     e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-    e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e2:SetCode(EVENT_SUMMON_SUCCESS)
-    e2:SetProperty(EFFECT_FLAG_DELAY)
-    e2:SetCountLimit(1,id)
+    e2:SetType(EFFECT_TYPE_IGNITION)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetCountLimit(1,id+200) -- Once per turn
     e2:SetTarget(s.thtg)
     e2:SetOperation(s.thop)
     c:RegisterEffect(e2)
-    local e3=e2:Clone()
-    e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-    c:RegisterEffect(e3)
 end
 
 -- Special Summon condition

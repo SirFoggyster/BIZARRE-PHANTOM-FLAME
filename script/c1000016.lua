@@ -1,6 +1,6 @@
 -- Heatwave Eruption
 local s,id=GetID()
-local ATTRIBUTE_FIRE=ATTRIBUTE_FIRE
+local SET_BIZARRE=0xabc
 
 function s.initial_effect(c)
     -- Activate: negate attack
@@ -24,9 +24,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     -- Negate the attack
     Duel.NegateAttack()
 
-    -- Count FIRE monsters in your deck
-    local ct=Duel.GetMatchingGroupCount(function(c) return c:IsAttribute(ATTRIBUTE_FIRE) end,tp,LOCATION_DECK,0,nil)
+    -- Count "Bizarre" monsters in your deck
+    local ct=Duel.GetMatchingGroupCount(function(c) return c:IsSetCard(SET_BIZARRE) end,tp,LOCATION_DECK,0,nil)
     if ct>0 then
-        Duel.Damage(1-tp,ct*700,REASON_EFFECT)
+        Duel.Damage(1-tp,ct*600,REASON_EFFECT)
     end
 end
