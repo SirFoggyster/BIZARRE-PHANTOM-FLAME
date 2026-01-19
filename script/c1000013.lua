@@ -14,9 +14,8 @@ end
 
 -- Filter for valid monsters
 function s.spfilter(c,e,tp)
-    return c:IsSetCard(SET_BIZARRE)
-        and (c:IsAttribute(ATTRIBUTE_FIRE) or c:IsAttribute(ATTRIBUTE_DARK))
-        and c:IsAttackAbove(2500)
+    return (c:IsSetCard(SET_BIZARRE) or c:IsSetCard(SET_PHANTOM))
+        and c:IsAttackAbove(1900)
         and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
@@ -24,16 +23,16 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then
         return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
+            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
     end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE)
 end
 
 -- Operation
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-    local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+    local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
     if #g>0 then
         Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
     end

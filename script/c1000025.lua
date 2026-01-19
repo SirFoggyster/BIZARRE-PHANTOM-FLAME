@@ -1,7 +1,11 @@
+-- Soft & Wet – Plunder Logic
 local s,id=GetID()
 function s.initial_effect(c)
+    
     -- Xyz Summon
-    Xyz.AddProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,SET_BIZARRE),4,2)
+    Xyz.AddProcedure(c,aux.FilterBoolFunction(function(c)
+        return c:IsSetCard(SET_BIZARRE) or c:IsSetCard(SET_PHANTOM)
+    end),4,2)
     c:EnableReviveLimit()
 
     -- Detach to apply effect

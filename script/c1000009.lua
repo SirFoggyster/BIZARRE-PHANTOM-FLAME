@@ -14,6 +14,17 @@ function s.initial_effect(c)
     e1:SetTarget(s.negtg)
     e1:SetOperation(s.negop)
     c:RegisterEffect(e1)
+    -- Special summon from GY and negate
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(id,1))
+    e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_NEGATE)
+    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+    e2:SetCode(EVENT_CHAINING)
+    e2:SetRange(LOCATION_GRAVE)
+    e2:SetCondition(s.spcon)
+    e2:SetTarget(s.sptg)
+    e2:SetOperation(s.spop)
+    c:RegisterEffect(e2)
 end
 
 -- Ash Blossom–style condition
@@ -57,5 +68,25 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
         if #g>0 then
             Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
         end
+    end
+end
+
+-- Condition to check if opponent activates an effect
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return rp~=tp and Duel.IsChainNegatable(ev)
+end
+
+-- Target for special summon and negate
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+end
+
+-- Special summon and negate the effect
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
+        Duel.NegateActivation(ev)
     end
 end
