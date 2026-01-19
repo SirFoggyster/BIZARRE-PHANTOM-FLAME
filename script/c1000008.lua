@@ -57,7 +57,6 @@ end
 function s.thfilter(c)
     return c:IsSetCard(SET_BIZARRE)
         and c:IsType(TYPE_SPELL)
-        and c:IsQuickPlaySpell()
         and c:IsAbleToHand()
 end
 

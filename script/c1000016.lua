@@ -1,6 +1,6 @@
 -- Heatwave Eruption
 local s,id=GetID()
-local SET_BIZARRE=0xabc
+local SET_BIZARRE=0xBA5
 
 function s.initial_effect(c)
     -- Activate: negate attack
